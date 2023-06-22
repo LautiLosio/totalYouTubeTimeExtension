@@ -122,12 +122,16 @@ a:hover {
   align-items: center;
 }
 
+.w-58 {
+  width: 58px;
+}
+
 .EFTtext {
   user-select: none;
   height: 16px;
+  width: 100%;
   font-size: 16px;
   cursor: pointer;
-  align-self: flex-end;
   padding: 0.5rem;
   color: #707070;
   font-weight: 900;
@@ -135,9 +139,9 @@ a:hover {
   border-radius: 10px;
 }
 
-.grid-3c {
+.grid-2c {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
 }
 

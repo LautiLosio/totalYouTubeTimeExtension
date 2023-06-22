@@ -126,6 +126,8 @@ function formatTime(date) {
 
 async function getDisplayType() {
   const { displayType } = await chrome.storage.sync.get("displayType");
+  EFTtextElement.textContent = displayType === 'EFT' ? 'Total' : 'EFT';
+  titleTextElement.textContent = displayType === 'EFT' ? 'You will finish at' : 'You will spend';
   return displayType;
 }
 
