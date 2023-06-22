@@ -2,13 +2,13 @@
 
 This extension is designed to help you keep track of your total watch time for YouTube videos. It automatically scans your open tabs to identify YouTube videos and calculates the cumulative time required to watch all the identified videos.
 
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/bde782fd-0de3-4315-92a5-1d574231aa31)
+![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/f749360e-c13c-4560-8dce-decbfc2cade7)
 
 ## Features
 
 - [x] Automatically detects open tabs with YouTube videos.
 - [x] Calculates and displays the total watch time for all identified videos.
-- [ ] (WIP) Calculates the estimated time to finish (ETF). The local time when you will finish watching all the videos.
+- [x] Calculates the estimated finish time (EFT). The time when you will finish watching all the videos.
 
 ## Installation
 
