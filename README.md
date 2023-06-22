@@ -19,7 +19,7 @@ To use this extension, follow these steps:
 3. Enable the developer mode.
 4. Click on "Load Unpacked" and select the downloaded folder `totalYouTubeTimeExtension`.
 5. The extension will be installed.
-6. Paste your YouTube Data V3 API Key on the input.
+6. Paste your YouTube Data API Key on the input.
 7. Done!
 
 
