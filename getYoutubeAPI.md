@@ -15,18 +15,30 @@ Follow these steps to obtain the YouTube Data API v3 API key:
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
 2. Sign in using your Google Account.
 3. If you haven't created a project yet, click on the "Select a project" dropdown at the top and click on "New Project". Enter a name for your project and click "Create".
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/965eb899-390a-4f84-82d1-7e7aca77e6b6)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/379e9b0a-a53c-4d2a-be01-4aecc02ab377.png" alt="image" style="width: 600px;">
+
 4. Once your project is created, ensure it is selected in the project dropdown at the top.
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/2112c848-ed90-450a-afde-64a675c14f47)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/0e193f37-3f05-46ad-8d93-c1f9661d42c5.png" alt="image" style="width: 600px;">
+
 5. In the left navigation menu, click on "APIs & Services" and then select "Library".
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/867e04c7-5144-48e5-8ba5-f9a53f39c3f4)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/3a64fd9c-d46d-405b-b10e-6f4af8e97cc6.png" alt="image" style="width: 600px;">
+
 6. In the search bar, type "YouTube Data API v3" and click on the result when it appears.
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/81f1a6cb-c8f0-4efe-b897-ea9e0c8b0868)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/34e5317f-53c1-473c-81e0-4e589cc7fd2a.png" alt="image" style="width: 600px;">
+
 7. On the API details page, click on the "Enable" button.
 8. After enabling the API, go back to the left navigation menu and click on "Credentials".
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/5af74900-b48c-4481-aa49-7d6311803f96)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/37162a55-6934-4c9e-8f85-f1a46bc654cb.png" alt="image" style="width: 600px;">
+
 9. On the Credentials page, click on the "Create Credentials" button and select "API key" from the dropdown menu.
-![image](https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/b13655b4-8f96-4062-8c50-b2eae1ab5c15)
+
+<img src="https://github.com/LautiLosio/totalYouTubeTimeExtension/assets/38726997/450b15eb-481b-40a7-9987-807953cf211d.png" alt="image" style="width: 600px;">
+
 10. Your API key will be created. You can click on the copy icon to copy the key to your clipboard.
 11. Make sure to restrict the usage of the API key for security purposes. You can do this by clicking on the "Restrict key" button under the API key. You can set restrictions such as IP addresses, websites, or specific APIs.
 12. Once you have copied the API key, you can use it in the extension to authenticate and authorize your requests to the YouTube Data API v3.
