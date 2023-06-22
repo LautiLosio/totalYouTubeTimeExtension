@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./popup.css">
+  <title>YouTubes Time Calculator</title>
+</head>
+<body>
+  <div class="container">
+    <h1>You will spend</h1>
+    <p id="totalDuration">00:00:00</p>
+    <b id="videosCount">0 videos detected</b>
+  </div>
+
+  <div class="api-container">
+    <div id="apiKeyStatusContainer">
+      <p id="apiKeyStatus">🔴 API Key Missing</p>
+      <i>&blacktriangledown;</i>
+    </div>
+    <form class="container apiKeyForm" id="apiKeyForm">
+      <input id="apiKey" type="APIkey" placeholder="Your API Key" required autocomplete="off">
+      <button id="submitApiKey" type="submit">Save</button>
+      <div class="flex">
+        <a href="https://developers.google.com/youtube/v3/getting-started" target="_blank" rel="noopener noreferrer">Need help?</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="./popup.js" type="module"></script>
+</body>
+</html>

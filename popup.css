@@ -1,0 +1,122 @@
+* {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: Arial, sans-serif;
+  background-color: #202020;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  width: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+}
+
+h1 {
+  color: #ff0000;
+  font-size: 24px;
+}
+
+p {
+  font-size: 16px;
+}
+
+#totalDuration {
+  padding: 0.5rem 0 1rem 0;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.api-container {
+  display: flex;
+  border-radius: 10px;
+  background-color: #444444;
+  padding: 1rem;
+  flex-direction: column;
+  user-select: none;
+}
+
+#apiKey {
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+  border: none;
+  background-color: #333333;
+  color: #fff;
+}
+
+#apiKey::placeholder {
+  color: #bbb;
+}
+
+#submitApiKey {
+  padding: 8px 16px;
+  background-color: #707070;
+  color: #fff;
+  border: none;
+  border-radius: 0 0 10px 10px;
+  cursor: pointer;
+}
+
+#submitApiKey:hover {
+  background-color: #d00000;
+}
+
+#apiKeyStatusContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.apiKeyForm {
+  max-height: 0px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  margin-top: 0px;
+}
+
+.show {
+  max-height: 150px;
+  opacity: 1;
+  margin-top: 1rem;
+}
+
+i { 
+  font-size: 16px;
+  font-style: normal;
+  width: 16px;
+  height: 18px;
+}
+
+b {
+  color: #707070;
+}
+
+a {
+  color: lightblue;
+  font-size: medium;
+  margin-top: 1rem;
+}
+
+a:hover {
+  color: #fff;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
