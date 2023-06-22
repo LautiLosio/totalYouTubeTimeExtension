@@ -5,6 +5,11 @@ const apiKeyInput = document.getElementById("apiKey");
 const totalDurationElement = document.getElementById("totalDuration");
 const apiKeyFormElement = document.getElementById("apiKeyForm");
 const videosCountElement = document.getElementById("videosCount");
+const EFTtextElement = document.getElementById("EFTtext");
+const titleTextElement = document.getElementById("titleText");
+
+let displayType = 'Total';
+let totalDuration = 0;
 
 apiKeyStatusContainerElement.addEventListener("click", () => {
   apiKeyFormElement.classList.toggle("show");
@@ -22,20 +27,13 @@ submitApiKeyElement.addEventListener("click", async () => {
   apiKeyInput.value = ""; // Clear input
 });
 
-(async () => {
-  const apiKey = await getApiKey();
-  if (apiKey) {
-    submitApiKeyElement.innerHTML = "Update API Key";
-    apiKeyStatusElement.textContent = "🟢 API Key saved";
-    const videoIds = await getVideoIds();
-    if (apiKey && videoIds && videoIds.length > 0) {
-      const videoLengths = await getVideoLengths(apiKey, videoIds);
-      const totalLength = calculateTotalLength(videoLengths);
-      const result = formatDuration(totalLength);
-      totalDurationElement.textContent = result;
-    }
-  }
-})();
+EFTtextElement.addEventListener("click", async () => {
+  displayType = displayType === 'Total' ? 'EFT' : 'Total';
+  chrome.storage.sync.set({ displayType });
+  EFTtextElement.textContent = displayType === 'EFT' ? 'Total' : 'EFT';
+  titleTextElement.textContent = displayType === 'EFT' ? 'You will finish at' : 'You will spend';
+  displayText(displayType);
+});
 
 async function getApiKey() {
   const { key } = await chrome.storage.sync.get("key");
@@ -64,7 +62,7 @@ async function getVideoLengths(apiKey, videoIds) {
     const response = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${apiKey}`
     );
-
+ 
     const data = await response.json();
 
     if (data.items) {
@@ -103,3 +101,62 @@ function formatDuration(duration) {
   const seconds = date.getUTCSeconds().toString().padStart(2, "0");
   return `${hours}:${minutes}:${seconds}`;
 }
+
+// calculate EFT (estimated finish time). The local time plus the total length. this is the time the user will finish watching all the videos.
+
+// get local system time
+async function getLocalTime() {
+  const time = new Date(); // this will create a new date object with the current time
+  return time;
+}
+
+
+function addSeconds(currentDate, seconds) {
+  const date = new Date(currentDate);
+  date.setSeconds(date.getSeconds() + seconds);
+  return date;
+}
+
+function formatTime(date) {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+async function getDisplayType() {
+  const { displayType } = await chrome.storage.sync.get("displayType");
+  return displayType;
+}
+
+async function calculateTotalDuration() {
+  const apiKey = await getApiKey();
+  if (apiKey) {
+    submitApiKeyElement.innerHTML = "Update API Key";
+    apiKeyStatusElement.textContent = "🟢 API Key saved";
+    const videoIds = await getVideoIds();
+    if (apiKey && videoIds && videoIds.length > 0) {
+      const videoDurations = await getVideoLengths(apiKey, videoIds);
+      totalDuration = calculateTotalLength(videoDurations);
+      displayType = await getDisplayType();
+      displayText(displayType);
+    }
+  } else {
+    apiKeyFormElement.classList.add("show");
+  }
+}
+
+async function displayText(type) { 
+  if (type === 'EFT') {
+    const localTime = await getLocalTime();
+    const localTimePlusTotalLength = addSeconds(localTime, totalDuration);
+    const localTimeResult = formatTime(localTimePlusTotalLength);
+    totalDurationElement.textContent = localTimeResult;
+  } else if (type === 'Total') {
+    const result = formatDuration(totalDuration);
+    totalDurationElement.textContent = result;
+  }
+}
+
+
+calculateTotalDuration();

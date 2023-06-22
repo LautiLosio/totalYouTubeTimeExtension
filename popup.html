@@ -8,13 +8,20 @@
   <title>YouTubes Time Calculator</title>
 </head>
 <body>
+  
   <div class="container">
-    <h1>You will spend</h1>
+    <h1 id="titleText">You will spend</h1>
     <p id="totalDuration">00:00:00</p>
-    <b id="videosCount">0 videos detected</b>
+    <div class="grid-3c gap-1">
+      <div></div>
+      <b id="videosCount">0 videos detected</b>
+      <div class="flex">
+        <p class="EFTtext" id="EFTtext">EFT</p>
+      </div>
+    </div>
   </div>
 
-  <div class="api-container">
+  <div class="api-container" id="api-container">
     <div id="apiKeyStatusContainer">
       <p id="apiKeyStatus">🔴 API Key Missing</p>
       <i>&blacktriangledown;</i>
