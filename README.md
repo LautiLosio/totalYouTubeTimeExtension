@@ -8,7 +8,7 @@ This extension is designed to help you keep track of your total watch time for Y
 
 - [x] Automatically detects open tabs with YouTube videos.
 - [x] Calculates and displays the total watch time for all identified videos.
-- [ ] (WIP) Calculates the estimated time to finish (ETF). The local time when you will finish to watch all the videos
+- [ ] (WIP) Calculates the estimated time to finish (ETF). The local time when you will finish watching all the videos.
 
 ## Installation
 
