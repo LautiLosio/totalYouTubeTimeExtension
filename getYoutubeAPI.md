@@ -1,4 +1,4 @@
-<a href="./README.md">`<- back to home --`</a>
+<a href="https://github.com/LautiLosio/totalYouTubeTimeExtension/tree/main">`<- back to home --`</a>
 
 # Obtaining YouTube Data API v3 API Key
 
@@ -47,7 +47,7 @@ Follow these steps to obtain the YouTube Data API v3 API key:
 
 **Note**: Keep your API key secure and do not share it publicly or expose it in client-side code. Treat it like a password, as it provides access to your project and may incur costs for unauthorized usage.
 
-<a href="./README.md">`<- back to home --`</a>
+<a href="https://github.com/LautiLosio/totalYouTubeTimeExtension/tree/main">`<- back to home --`</a>
 
 > The API Key is stored on your local machine for your convenience (so you don't have to paste it every time). This extension does not share or use your API Key without your consent for other purposes.
 
