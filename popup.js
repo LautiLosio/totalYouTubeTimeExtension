@@ -7,6 +7,7 @@ const apiKeyFormElement = document.getElementById("apiKeyForm");
 const videosCountElement = document.getElementById("videosCount");
 const EFTtextElement = document.getElementById("EFTtext");
 const titleTextElement = document.getElementById("titleText");
+const groupTabsElement = document.getElementById("groupTabs");
 
 let displayType = 'Total';
 let totalDuration = 0;
@@ -131,7 +132,33 @@ async function getDisplayType() {
   return displayType;
 }
 
+async function groupTabs() {
+  const tabs = await chrome.tabs.query({
+    url: "https://www.youtube.com/*",
+  });
+  const tabIds = tabs.map(tab => tab.id);
+  
+  chrome.tabGroups.query({ title: 'YouTube' }, (groups) => {
+    if (groups.length > 0) {
+      chrome.tabs.group({ tabIds, groupId: groups[0].id });
+    } else {
+      createGroup();
+    }
+  }
+  );
+}
+
+async function createGroup() {
+  chrome.tabs.query({
+    url: "https://www.youtube.com/*",
+  }, (tabs) => {
+    const tabIds = tabs.map(tab => tab.id);
+    chrome.tabs.group({ tabIds }, (groupId) => { chrome.tabGroups.update(groupId, { color: 'red', title: 'YouTube' }) });
+  });
+}
+
 async function calculateTotalDuration() {
+  groupTabs();
   const apiKey = await getApiKey();
   if (apiKey) {
     submitApiKeyElement.innerHTML = "Update API Key";

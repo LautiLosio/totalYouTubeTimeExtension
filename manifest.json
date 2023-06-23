@@ -13,6 +13,7 @@
   },
   "host_permissions": ["https://*.youtube.com/*"],
   "permissions": [
-    "storage"
+    "storage",
+    "tabGroups"
   ]
 }
