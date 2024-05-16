@@ -45,10 +45,8 @@ Follow these steps to obtain the YouTube Data API v3 API key:
 11. Make sure to restrict the usage of the API key for security purposes. You can do this by clicking on the "Restrict key" button under the API key. You can set restrictions such as IP addresses, websites, or specific APIs.
 12. Once you have copied the API key, you can use it in the extension to authenticate and authorize your requests to the YouTube Data API v3.
 
-**Note**: Keep your API key secure and do not share it publicly or expose it in client-side code. Treat it like a password, as it provides access to your project and may incur costs for unauthorized usage.
+**Note**: Keep your API key secure and do not share it publicly or expose it in client-side code. Treat it like a password, as it provides access to your project and may incur costs for unauthorized usage. The API Key is stored on your local machine for your convenience (so you don't have to paste it every time). totalYouTubeTime does not share or use your API Key without your consent for other purposes. Dont believe me? [See for yourself](https://github.com/LautiLosio/totalYouTubeTimeExtension/blob/main/popup.js#L43)
 
 <a href="https://github.com/LautiLosio/totalYouTubeTimeExtension/tree/main">`<- back to home --`</a>
-
-> The API Key is stored on your local machine for your convenience (so you don't have to paste it every time). This extension does not share or use your API Key without your consent for other purposes.
 
 
