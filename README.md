@@ -9,6 +9,7 @@ This extension is designed to help you keep track of your total watch time for Y
 - [x] Automatically detects open tabs with YouTube videos.
 - [x] Calculates and displays the total watch time for all identified videos.
 - [x] Calculates the estimated finish time (EFT). The time when you will finish watching all the videos.
+- [x] Automatically groups YouTube tabs.
 
 ## Installation
 
