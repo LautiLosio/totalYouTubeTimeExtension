@@ -16,6 +16,7 @@ body {
   padding: 1rem;
   text-align: center;
   width: 200px;
+  user-select: none;
 }
 
 .container {
@@ -33,10 +34,11 @@ p {
   font-size: 16px;
 }
 
-#totalDuration {
+#timeDisplay {
   padding: 0.5rem 0 1rem 0;
   font-size: 48px;
   font-weight: bold;
+  user-select: none;
 }
 
 .api-container {
@@ -104,6 +106,7 @@ i {
 
 b {
   color: #707070;
+  user-select: none;
 }
 
 a {
@@ -126,17 +129,28 @@ a:hover {
   width: 58px;
 }
 
-.EFTtext {
+.time-toggle-button {
   user-select: none;
-  height: 16px;
+  height: auto;
   width: 100%;
-  font-size: 16px;
+  font-size: 12px;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 4px 8px;
   color: #707070;
-  font-weight: 900;
-  border: 2px solid #505050;
-  border-radius: 10px;
+  font-weight: bold;
+  border: 1px solid #505050;
+  border-radius: 6px;
+  background: none;
+  transition: all 0.2s ease;
+}
+
+.time-toggle-button:hover {
+  background-color: #505050;
+  color: #fff;
+}
+
+.time-toggle-button.showing-eft {
+  color: #fff;
 }
 
 .grid-2c {

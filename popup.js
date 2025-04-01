@@ -1,191 +1,169 @@
-const apiKeyStatusContainerElement = document.getElementById("apiKeyStatusContainer");
-const apiKeyStatusElement = document.getElementById("apiKeyStatus");
-const submitApiKeyElement = document.getElementById("submitApiKey");
-const apiKeyInput = document.getElementById("apiKey");
-const totalDurationElement = document.getElementById("totalDuration");
-const apiKeyFormElement = document.getElementById("apiKeyForm");
-const videosCountElement = document.getElementById("videosCount");
-const EFTtextElement = document.getElementById("EFTtext");
-const titleTextElement = document.getElementById("titleText");
-const groupTabsElement = document.getElementById("groupTabs");
-
-let displayType = 'Total';
-let totalDuration = 0;
-
-apiKeyStatusContainerElement.addEventListener("click", () => {
-  apiKeyFormElement.classList.toggle("show");
-  apiKeyInput.focus();
-  const downArrow = "\u25BE";
-  const upArrow = "\u25B4";
-  apiKeyStatusContainerElement.querySelector("i").innerHTML = apiKeyFormElement.classList.contains("show") ? upArrow : downArrow;
-
-});
-
-submitApiKeyElement.addEventListener("click", async () => {
-  const apiKey = apiKeyInput.value;
-  await saveApiKey(apiKey);
-  apiKeyStatusElement.textContent = "🟢 API Key saved";
-  apiKeyInput.value = ""; // Clear input
-});
-
-EFTtextElement.addEventListener("click", async () => {
-  displayType = displayType === 'Total' ? 'EFT' : 'Total';
-  chrome.storage.sync.set({ displayType });
-  EFTtextElement.textContent = displayType === 'EFT' ? 'Total' : 'EFT';
-  titleTextElement.textContent = displayType === 'EFT' ? 'You will finish at' : 'You will spend';
-  displayText(displayType);
-});
-
-async function getApiKey() {
-  const { key } = await chrome.storage.sync.get("key");
-  return key;
+// Function to convert time string (MM:SS) to seconds
+function timeToSeconds(timeStr) {
+  const [minutes, seconds] = timeStr.split(':').map(Number);
+  return minutes * 60 + seconds;
 }
 
-async function saveApiKey(apiKey) {
-  await chrome.storage.sync.set({ key: apiKey });
-}
-
-async function getVideoIds() {
-  const tabs = await chrome.tabs.query({
-    url: "https://www.youtube.com/watch*",
-  });
-
-  videosCountElement.textContent = `${tabs.length} ${tabs.length === 1 ? 'video' : 'videos'} found`
-
-  return tabs.map((tab) => {
-    const url = new URL(tab.url);
-    return url.searchParams.get("v");
-  });
-}
-
-async function getVideoLengths(apiKey, videoIds) {
-  try {
-    const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${apiKey}`
-    );
- 
-    const data = await response.json();
-
-    if (data.items) {
-      return data.items.map((item) => item.contentDetails.duration);
-    } else {
-      apiKeyStatusElement.textContent = "🔴 Bad API key.";
-      throw new Error("Unable to fetch video lengths. Please check your API key.");
-    }
-  } catch (error) {
-    // Handle the error appropriately, such as displaying an error message to the user.
-    
-    console.error(error);
-    throw error;
-  }
-}
-
-function calculateTotalLength(videoLengths) {
-  return videoLengths.reduce((acc, curr) => {
-    return acc + parseISO8601(curr);
-  }, 0);
-}
-
-function parseISO8601(duration) {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  const [_, hours, minutes, seconds] = match;
-  const parsedHours = parseInt(hours) || 0;
-  const parsedMinutes = parseInt(minutes) || 0;
-  const parsedSeconds = parseInt(seconds) || 0;
-  return parsedHours * 3600 + parsedMinutes * 60 + parsedSeconds;
-}
-
-function formatDuration(duration) {
-  const date = new Date(duration * 1000);
-  const hours = date.getUTCHours().toString().padStart(2, "0");
-  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
-  const seconds = date.getUTCSeconds().toString().padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
-}
-
-// calculate EFT (estimated finish time). The local time plus the total length. this is the time the user will finish watching all the videos.
-
-// get local system time
-async function getLocalTime() {
-  const time = new Date(); // this will create a new date object with the current time
-  return time;
-}
-
-
-function addSeconds(currentDate, seconds) {
-  const date = new Date(currentDate);
-  date.setSeconds(date.getSeconds() + seconds);
-  return date;
-}
-
-function formatTime(date) {
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-  return `${hours}:${minutes}:${seconds}`;
-}
-
-async function getDisplayType() {
-  const { displayType } = await chrome.storage.sync.get("displayType");
-  EFTtextElement.textContent = displayType === 'EFT' ? 'Total' : 'EFT';
-  titleTextElement.textContent = displayType === 'EFT' ? 'You will finish at' : 'You will spend';
-  return displayType;
-}
-
-async function groupTabs() {
-  const tabs = await chrome.tabs.query({
-    url: "https://www.youtube.com/*",
-  });
-  const tabIds = tabs.map(tab => tab.id);
+// Function to convert seconds to time string (HH:MM:SS)
+function secondsToTime(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
   
-  chrome.tabGroups.query({ title: 'YouTube' }, (groups) => {
-    if (groups.length > 0) {
-      chrome.tabs.group({ tabIds, groupId: groups[0].id });
-    } else {
-      createGroup();
-    }
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
-  );
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-async function createGroup() {
-  chrome.tabs.query({
-    url: "https://www.youtube.com/*",
-  }, (tabs) => {
-    const tabIds = tabs.map(tab => tab.id);
-    chrome.tabs.group({ tabIds }, (groupId) => { chrome.tabGroups.update(groupId, { color: 'red', title: 'YouTube' }) });
+// Function to get time information from a YouTube tab
+async function getTabTimeInfo(tabId) {
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => {
+        // Try to get video element
+        const videoElement = document.querySelector('video');
+        
+        if (videoElement && !isNaN(videoElement.duration) && videoElement.duration > 0) {
+          // Get duration and current time directly from video element
+          const duration = Math.floor(videoElement.duration);
+          const current = Math.floor(videoElement.currentTime);
+          
+          // Convert to MM:SS format
+          const durationStr = `${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`;
+          const currentStr = `${Math.floor(current / 60)}:${(current % 60).toString().padStart(2, '0')}`;
+          
+          return {
+            duration: durationStr,
+            current: currentStr,
+            isValid: true
+          };
+        }
+        
+        return {
+          duration: '0:00',
+          current: '0:00',
+          isValid: false
+        };
+      }
+    });
+    
+    return results[0].result;
+  } catch (error) {
+    console.error('Error getting time info:', error);
+    return { duration: '0:00', current: '0:00', isValid: false };
+  }
+}
+
+// Function to calculate Estimated Finish Time (EFT)
+function calculateEFT(remainingTime) {
+  const now = new Date();
+  const finishTime = new Date(now.getTime() + remainingTime * 1000);
+  return finishTime.toLocaleTimeString([], { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   });
 }
 
-async function calculateTotalDuration() {
-  groupTabs();
-  const apiKey = await getApiKey();
-  if (apiKey) {
-    submitApiKeyElement.innerHTML = "Update API Key";
-    apiKeyStatusElement.textContent = "🟢 API Key saved";
-    const videoIds = await getVideoIds();
-    if (apiKey && videoIds && videoIds.length > 0) {
-      const videoDurations = await getVideoLengths(apiKey, videoIds);
-      totalDuration = calculateTotalLength(videoDurations);
-      displayType = await getDisplayType();
-      displayText(displayType);
+// Function to update time information
+async function updateTimeInfo() {
+  const tabs = await chrome.tabs.query({ url: 'https://www.youtube.com/watch*' });
+  let totalDuration = 0;
+  let totalWatched = 0;
+  let validVideoCount = 0;
+  let loadingCount = 0;
+
+  for (const tab of tabs) {
+    const timeInfo = await getTabTimeInfo(tab.id);
+    if (timeInfo.isValid) {
+      totalDuration += timeToSeconds(timeInfo.duration);
+      totalWatched += timeToSeconds(timeInfo.current);
+      validVideoCount++;
+    } else {
+      loadingCount++;
     }
+  }
+
+  const remainingTime = totalDuration - totalWatched;
+
+  // Only update if we have at least one valid video
+  if (validVideoCount > 0) {
+    // Store the values for toggle functionality
+    window.totalDurationValue = totalDuration;
+    window.remainingTimeValue = remainingTime;
+
+    // Update UI elements
+    const timeDisplayElement = document.getElementById('timeDisplay');
+    const timeToggleButton = document.getElementById('timeToggleButton');
+    const titleText = document.getElementById('titleText');
+    
+    // Get the current display state
+    const { showingEft = false } = await chrome.storage.local.get('showingEft');
+    
+    // Update based on current toggle state
+    if (showingEft) {
+      timeDisplayElement.textContent = calculateEFT(remainingTime);
+      timeToggleButton.classList.add('showing-eft');
+      timeToggleButton.textContent = 'Left';
+      titleText.textContent = 'Finishing at';
+    } else {
+      timeDisplayElement.textContent = secondsToTime(remainingTime);
+      timeToggleButton.classList.remove('showing-eft');
+      timeToggleButton.textContent = 'Finish';
+      titleText.textContent = 'Time remaining';
+    }
+    
+    const statusText = loadingCount > 0 ? 
+      `${validVideoCount} loaded + ${loadingCount} loading` :
+      `${validVideoCount} ${validVideoCount === 1 ? 'video' : 'videos'} loaded`;
+    
+    document.getElementById('videoCount').textContent = statusText;
   } else {
-    apiKeyFormElement.classList.add("show");
+    // No valid videos found
+    const timeDisplayElement = document.getElementById('timeDisplay');
+    const titleText = document.getElementById('titleText');
+    
+    timeDisplayElement.textContent = '--:--';
+    titleText.textContent = 'Waiting for videos';
+    document.getElementById('videoCount').textContent = 
+      `${tabs.length} ${tabs.length === 1 ? 'video' : 'videos'} loading...`;
   }
 }
 
-async function displayText(type) { 
-  if (type === 'EFT') {
-    const localTime = await getLocalTime();
-    const localTimePlusTotalLength = addSeconds(localTime, totalDuration);
-    const localTimeResult = formatTime(localTimePlusTotalLength);
-    totalDurationElement.textContent = localTimeResult;
-  } else if (type === 'Total') {
-    const result = formatDuration(totalDuration);
-    totalDurationElement.textContent = result;
+// Function to toggle between remaining time and EFT
+async function toggleDisplay() {
+  const timeDisplayElement = document.getElementById('timeDisplay');
+  const timeToggleButton = document.getElementById('timeToggleButton');
+  const titleText = document.getElementById('titleText');
+  
+  // Get the current display state
+  const { showingEft = false } = await chrome.storage.local.get('showingEft');
+  
+  if (showingEft) {
+    timeDisplayElement.textContent = secondsToTime(window.remainingTimeValue);
+    timeToggleButton.classList.remove('showing-eft');
+    timeToggleButton.textContent = 'Finish';
+    titleText.textContent = 'Time remaining';
+    await chrome.storage.local.set({ showingEft: false });
+  } else {
+    timeDisplayElement.textContent = calculateEFT(window.remainingTimeValue);
+    timeToggleButton.classList.add('showing-eft');
+    timeToggleButton.textContent = 'Left';
+    titleText.textContent = 'Finishing at';
+    await chrome.storage.local.set({ showingEft: true });
   }
 }
 
-
-calculateTotalDuration();
+// Initialize popup
+document.addEventListener('DOMContentLoaded', () => {
+  updateTimeInfo();
+  
+  // Add click handler for time toggle button
+  document.getElementById('timeToggleButton').addEventListener('click', toggleDisplay);
+  
+  // Update times every second
+  setInterval(updateTimeInfo, 1000);
+}); 
